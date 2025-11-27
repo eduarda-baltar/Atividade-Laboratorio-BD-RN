@@ -18,7 +18,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-const API_URL = "http://192.168.1.12:3000";
+const API_URL = "http://localhost:3000";
 
 type Place = {
   _id: string;
@@ -42,7 +42,7 @@ export default function App() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Date / time picker states
+
   const [reportedAt, setReportedAt] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [dateMode, setDateMode] = useState<"date" | "time">("date");
@@ -119,7 +119,7 @@ export default function App() {
     try {
       setLoading(true);
 
-      // Se quiser enviar reportedAt como ISO string (ou null)
+     
       const reportedAtIso = reportedAt ? reportedAt.toISOString() : null;
 
       const res = await fetch(`${API_URL}/api/places`, {
@@ -163,9 +163,7 @@ export default function App() {
     }
   };
 
-  // ======= NOVAS FUNÇÕES DE DELETE =======
-
-  // Deleta todos os registros (chama DELETE /api/places)
+ 
   const deleteAll = () => {
     Alert.alert(
       "Confirmar exclusão",
@@ -199,7 +197,7 @@ export default function App() {
     );
   };
 
-  // Deleta um registro individual (chama DELETE /api/places/:id)
+ 
   const deleteOne = (id: string) => {
     Alert.alert("Confirmar exclusão", "Deseja apagar este registro?", [
       { text: "Cancelar", style: "cancel" },
@@ -217,7 +215,7 @@ export default function App() {
               Alert.alert("Erro", "Falha ao apagar o registro.");
               return;
             }
-            // remove localmente sem refetch
+        
             setPlaces((prev) => prev.filter((p) => p._id !== id));
             Alert.alert("Sucesso", "Registro apagado.");
           } catch (error) {
@@ -229,11 +227,11 @@ export default function App() {
     ]);
   };
 
-  // ======= /NOVAS FUNÇÕES DE DELETE =======
+
 
   const onChangeDate = (event: DateTimePickerEvent, selected?: Date) => {
     setShowDatePicker(false);
-    // @ts-ignore - event.type exists, mas types podem variar
+ 
     if (event.type === "dismissed") return;
     if (selected) {
       if (!reportedAt) {
@@ -262,7 +260,7 @@ export default function App() {
   const renderItem = ({ item }: { item: Place }) => (
     <TouchableOpacity
       activeOpacity={0.8}
-      onLongPress={() => deleteOne(item._id)} // apagar com long press
+      onLongPress={() => deleteOne(item._id)} 
     >
       <View style={styles.card}>
         <Text style={styles.cardTitle}>{item.title}</Text>

@@ -1,28 +1,27 @@
-// server.js
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 
-const Place = require('./models/Place'); // verifique se o arquivo existe e exporta o model corretamente
-
+const Place = require('./models/Place'); 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://eduardab:%40Senha1234@cluster0.iafob6b.mongodb.net/geodb?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/geobackend';
 
-// Middlewares
+
 app.use(cors());
-app.options('*', cors()); // responde preflight
-app.use(express.json({ limit: '15mb' })); // aumenta limite para suportar imagens base64
+app.options('*', cors()); 
+app.use(express.json({ limit: '15mb' })); 
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
-// Healthcheck
+
 app.get('/', (req, res) => {
   return res.json({ status: 'ok', message: 'Geo Backend API' });
 });
 
-// List all places
+
 app.get('/api/places', async (req, res) => {
   try {
     const places = await Place.find().sort({ createdAt: -1 });
@@ -33,7 +32,7 @@ app.get('/api/places', async (req, res) => {
   }
 });
 
-// Create new place (aceita lab e reportedAt se enviados)
+
 app.post('/api/places', async (req, res) => {
   try {
     const { title, description, latitude, longitude, photo, lab, reportedAt } = req.body;
@@ -60,7 +59,7 @@ app.post('/api/places', async (req, res) => {
   }
 });
 
-// DELETE - apagar todos
+
 app.delete('/api/places', async (req, res) => {
   try {
     const result = await Place.deleteMany({});
@@ -71,7 +70,7 @@ app.delete('/api/places', async (req, res) => {
   }
 });
 
-// DELETE - apagar um por id com validação
+
 app.delete('/api/places/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,7 +90,7 @@ app.delete('/api/places/:id', async (req, res) => {
   }
 });
 
-// Conexão com Mongo e start do servidor
+
 mongoose
   .connect(MONGO_URI, {
     useNewUrlParser: true,
